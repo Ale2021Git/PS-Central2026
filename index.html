@@ -1,49 +1,3 @@
-🏥 PSC 2026
-📱 Manifest
-💻 HTML Splash
-📱 Splash PNG
-💾 Ícones PNG
-🚀 Implementação
-Preview
-🏥 Escala PS Central 2026
-Sistema completo de gestão de escala médica
-
-✨ Recursos da Aplicação
-📅
-Calendário 2026 Completo
-Visualização de todos os meses com sistema de plantão 24x24h
-
-👥
-Duas Equipes (A e B)
-Alternância automática entre plantão e folga
-
-🎯
-Feriados Nacionais
-Destaque automático de 14 feriados do ano
-
-📝
-Sistema de Anotações
-Salve observações em cada dia (LocalStorage)
-
-📊
-Estatísticas Completas
-Total de plantões, folgas e carga horária anual
-
-🔄
-Cards Flip 3D
-Toque no mês para ver resumo de feriados e notas
-
-📞
-Telefones de Emergência
-SAMU, Bombeiros, Polícia com ligação direta
-
-⏰
-Relógio em Tempo Real
-Status atual: plantão ou folga + horário
-
-📋 Copiar Código Completo
-📥 Baixar escala-ps-central-2026.html
-💻 Código Fonte
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -293,58 +247,57 @@ Status atual: plantão ou folga + horário
             let primDiaSemana = new Date(2026, m, 1).getDay();
             const espacos = primDiaSemana === 0 ? 6 : primDiaSemana - 1;
             
-            let diasHTML = `<div class="dia-sem">Seg</div><div class="dia-sem">Ter</div><div class="dia-sem">Qua</div><div class="dia-sem">Qui</div><div class="dia-sem">Sex</div><div class="dia-sem">Sáb</div><div class="dia-sem">Dom</div>`;
+            let diasHTML = '<div class="dia-sem">Seg</div><div class="dia-sem">Ter</div><div class="dia-sem">Qua</div><div class="dia-sem">Qui</div><div class="dia-sem">Sex</div><div class="dia-sem">Sáb</div><div class="dia-sem">Dom</div>';
             
-            for(let e=0; e<espacos; e++) diasHTML += `<div></div>`;
+            for(let e=0; e<espacos; e++) diasHTML += '<div></div>';
 
             let feriadosLista = "", notasLista = "";
 
             for(let d=1; d<=totalDias; d++) {
                 const dt = new Date(2026, m, d);
-                const iso = `2026-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                const iso = '2026-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
                 const trab = checkTrabalho(dt, turma);
                 
                 if(trab) p++; else f++;
                 
                 if(feriados[iso]) {
-                    feriadosLista += `• ${d}: ${feriados[iso]}<br>`;
+                    feriadosLista += '• ' + d + ': ' + feriados[iso] + '<br>';
                     trab ? ft++ : ff++;
                 }
 
                 if(notas[iso]) {
-                    notasLista += `<div style="background:rgba(255,255,255,0.1); padding:8px; border-radius:8px; margin-bottom:5px; font-size:0.8em;"><b>Dia ${d}:</b> ${notas[iso]}</div>`;
+                    notasLista += '<div style="background:rgba(255,255,255,0.1); padding:8px; border-radius:8px; margin-bottom:5px; font-size:0.8em;"><b>Dia ' + d + ':</b> ' + notas[iso] + '</div>';
                 }
 
                 let corClasse = trab ? 'BG-ESCURO' : 'BG-CLARO';
-                let cls = `dia ${corClasse}`;
+                let cls = 'dia ' + corClasse;
                 if(dt.getTime() === hoje.getTime()) cls += " hoje";
                 if(feriados[iso]) cls += " FERIADO";
                 if(notas[iso]) cls += " HAS_NOTE";
 
-                diasHTML += `<div class="${cls}" onclick="abrirModalNota('${iso}')">${d}</div>`;
+                diasHTML += '<div class="' + cls + '" onclick="abrirModalNota('' + iso + '')">' + d + '</div>';
             }
 
             const container = document.createElement('div');
             container.className = 'mes-container';
-            container.innerHTML = `
-                <div class="mes-inner" id="inner-${m}">
-                    <div class="mes-face">
-                        <div class="mes-header" onclick="toggleFlip(${m})">
-                            <h4 class="mes-nome">${mNome}</h4>
-                            <span class="ano-destaque">2026</span>
-                        </div>
-                        <div class="grid">${diasHTML}</div>
-                    </div>
-                    <div class="mes-face mes-back" onclick="toggleFlip(${m})">
-                        <div style="font-size:0.8em; font-weight:800; color:var(--neon); border-bottom:1px solid rgba(255,255,255,0.2); padding-bottom:5px; margin-bottom:10px; display:flex; justify-content:space-between;">
-                            RESUMO DE ${mNome.toUpperCase()}
-                            <span class="material-symbols-outlined" style="font-size:18px">close</span>
-                        </div>
-                        <div style="font-size:0.7em; line-height:1.4;">${feriadosLista || "Nenhum feriado neste mês."}</div>
-                        <div style="font-size:0.8em; font-weight:800; color:var(--neon); margin-top:15px; border-bottom:1px solid rgba(255,255,255,0.2); padding-bottom:5px;">ANOTAÇÕES</div>
-                        <div style="overflow-y:auto; flex-grow:1; margin-top:8px; font-size:0.9em;">${notasLista || "Nenhuma nota salva."}</div>
-                    </div>
-                </div>`;
+            container.innerHTML = '<div class="mes-inner" id="inner-' + m + '">' +
+                '<div class="mes-face">' +
+                    '<div class="mes-header" onclick="toggleFlip(' + m + ')">' +
+                        '<h4 class="mes-nome">' + mNome + '</h4>' +
+                        '<span class="ano-destaque">2026</span>' +
+                    '</div>' +
+                    '<div class="grid">' + diasHTML + '</div>' +
+                '</div>' +
+                '<div class="mes-face mes-back" onclick="toggleFlip(' + m + ')">' +
+                    '<div style="font-size:0.8em; font-weight:800; color:var(--neon); border-bottom:1px solid rgba(255,255,255,0.2); padding-bottom:5px; margin-bottom:10px; display:flex; justify-content:space-between;">' +
+                        'RESUMO DE ' + mNome.toUpperCase() +
+                        '<span class="material-symbols-outlined" style="font-size:18px">close</span>' +
+                    '</div>' +
+                    '<div style="font-size:0.7em; line-height:1.4;">' + (feriadosLista || "Nenhum feriado neste mês.") + '</div>' +
+                    '<div style="font-size:0.8em; font-weight:800; color:var(--neon); margin-top:15px; border-bottom:1px solid rgba(255,255,255,0.2); padding-bottom:5px;">ANOTAÇÕES</div>' +
+                    '<div style="overflow-y:auto; flex-grow:1; margin-top:8px; font-size:0.9em;">' + (notasLista || "Nenhuma nota salva.") + '</div>' +
+                '</div>' +
+            '</div>';
             box.appendChild(container);
         }
 
@@ -357,7 +310,7 @@ Status atual: plantão ou folga + horário
     }
 
     function toggleFlip(idx) { 
-        document.getElementById(`inner-${idx}`).classList.toggle('flipped'); 
+        document.getElementById('inner-' + idx).classList.toggle('flipped'); 
     }
 
     function atualizarStatus() {
@@ -428,70 +381,3 @@ Status atual: plantão ou folga + horário
 </script>
 </body>
 </html>
-🛠️
-Tecnologias Utilizadas
-HTML5
-
-Estrutura semântica moderna
-
-CSS3
-
-Animações 3D, gradientes, responsivo
-
-JavaScript Vanilla
-
-Sem dependências externas
-
-LocalStorage
-
-Persistência de anotações
-
-Google Fonts
-
-Inter + JetBrains Mono
-
-Material Icons
-
-Ícones modernos do Google
-
-📚
-Como Usar
-Baixe ou copie o código HTML completo
-Salve como escala-ps-central-2026.html
-Abra o arquivo em qualquer navegador moderno (Chrome, Firefox, Safari, Edge)
-Selecione sua equipe (A ou B) no seletor superior
-Navegue pelos meses, toque nos dias para adicionar anotações
-Use os botões do header para: Ajuda, Estatísticas e Telefones de Emergência
-🎨
-Personalizações Fáceis
-Alterar Cores do PS:
-
-Procure por :root e modifique as variáveis CSS
-
-Adicionar/Remover Feriados:
-
-Edite o objeto feriados no JavaScript
-
-Alterar Nome do Hospital:
-
-Procure por "PS CENTRAL" e "Dr. Armando G. S. Couto"
-
-Adicionar Telefones:
-
-Edite a seção modalTelefones
-
-✅ Totalmente Compatível
-🖥️
-Desktop
-
-📱
-Mobile
-
-🍎
-iOS Safari
-
-🤖
-Android
-
-Funciona offline • Sem necessidade de servidor • Pronto para PWA
-
