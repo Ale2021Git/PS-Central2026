@@ -1,5 +1,5 @@
 {
-  "name": "Escala PS Central - Dr. Armando",
+  "name": "Escala PS Central 2026",
   "short_name": "PSC 2026",
   "description": "Escala de Plantões 2026 - Pronto Socorro Central",
   "start_url": "./index.html",
@@ -22,6 +22,7 @@
     }
   ]
 }
+
 
 
 
