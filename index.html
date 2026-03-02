@@ -42,68 +42,23 @@
             --policia: #1e293b;
         }
 
-        * { 
-            -webkit-tap-highlight-color: transparent; 
-            box-sizing: border-box; 
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-
-        textarea, input {
-            -webkit-user-select: text;
-            user-select: text;
-        }
-
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+        textarea, input { -webkit-user-select: text; user-select: text; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; overflow-x: hidden; }
         
-        header { 
-            background: var(--ps-pantone287); 
-            padding: calc(15px + env(safe-area-inset-top)) 15px 15px 15px; 
-            color: white; display: flex; align-items: center; justify-content: space-between;
-            position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-                
+        header { background: var(--ps-pantone287); padding: calc(15px + env(safe-area-inset-top)) 15px 15px 15px; color: white; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
         .title-group { flex-grow: 1; }
         .title-main { font-size: 0.75em; font-weight: 800; text-transform: uppercase; display: block; letter-spacing: 0.5px; }
         .title-sub { font-size: 0.55em; opacity: 0.8; display: block; }
-                
         .header-actions { display: flex; gap: 8px; }
-        .btn-header {
-            width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
-            background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 10px; color: white; cursor: pointer;
-        }
+        .btn-header { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 10px; color: white; cursor: pointer; }
 
-        .status-panel { 
-            background: var(--card); border-radius: 20px; padding: 15px; margin: 15px; 
-            border: 1px solid var(--border); text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-                
-        .clock { 
-            font-family: 'JetBrains Mono', monospace; 
-            font-size: 2.2em; 
-            color: var(--ps-pantone287); 
-            letter-spacing: -1px; 
-            margin-bottom: 5px;
-            pointer-events: none; 
-        }
-                
-        #status-badge { 
-            font-weight: 900; font-size: 1.25em; text-transform: uppercase; 
-            padding: 12px 28px; border-radius: 50px; display: inline-flex; 
-            align-items: center; gap: 10px; margin-top: 5px; transition: 0.3s;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-        }
+        .status-panel { background: var(--card); border-radius: 20px; padding: 15px; margin: 15px; border: 1px solid var(--border); text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .clock { font-family: 'JetBrains Mono', monospace; font-size: 2.2em; color: var(--ps-pantone287); letter-spacing: -1px; margin-bottom: 5px; pointer-events: none; }
+        #status-badge { font-weight: 900; font-size: 1.25em; text-transform: uppercase; padding: 12px 28px; border-radius: 50px; display: inline-flex; align-items: center; gap: 10px; margin-top: 5px; transition: 0.3s; box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
 
         .selector-container { margin: 0 15px 15px 15px; }
-        select { 
-            width: 100%; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 1em;
-            border: 2px solid var(--ps-pantone287); color: var(--ps-pantone287); background: white;
-            text-align-last: center; outline: none; appearance: none;
-            -webkit-user-select: auto;
-        }
+        select { width: 100%; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 1em; border: 2px solid var(--ps-pantone287); color: var(--ps-pantone287); background: white; text-align-last: center; outline: none; appearance: none; -webkit-user-select: auto; }
 
         .mes-container { margin: 0 15px 25px 15px; height: 360px; perspective: 1000px; }
         .mes-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
@@ -226,17 +181,18 @@
 </div>
 
 <script>
-    // Registro do Service Worker com caminho absoluto para GitHub Pages
+    // Configurações do SW para PWA
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('/PS-Central2026/sw.js')
-                .then(reg => console.log('Service Worker registrado com sucesso.'))
-                .catch(err => console.log('Erro ao registrar Service Worker:', err));
+                .then(reg => console.log('SW ativo'))
+                .catch(err => console.log('Erro SW', err));
         });
     }
 
     const feriados = { "2026-01-01": "Ano Novo", "2026-01-20": "Padroeiro", "2026-02-17": "Carnaval", "2026-04-03": "Paixão", "2026-04-21": "Tiradentes", "2026-04-23": "São Jorge", "2026-05-01": "Trabalho", "2026-06-04": "Corpus Christi", "2026-09-07": "Independência", "2026-10-12": "Aparecida", "2026-11-02": "Finados", "2026-11-15": "República", "2026-11-20": "Zumbi", "2026-12-25": "Natal" };
     const DB_KEY = "PS_CENTRAL_2026_V12";
+    const TURMA_KEY = "PS_TURMA_PREFERIDA_2026"; // Chave única para a equipe
     let dataAtiva = "";
 
     function checkTrabalho(dt, t) {
@@ -245,15 +201,27 @@
         return t === 'A' ? (diffDays % 2 === 0) : (diffDays % 2 !== 0);
     }
 
+    // Chamada quando o usuário muda o seletor manualmente
     function gerarComAnalytics() {
-        const turma = document.getElementById('turmaSelect').value;
-        gtag('event', 'change_team', { 'team': turma });
-        gerar();
+        const selectEl = document.getElementById('turmaSelect');
+        const turmaEscolhida = selectEl.value;
+        
+        // GRAVA A ESCOLHA NA MEMÓRIA
+        localStorage.setItem(TURMA_KEY, turmaEscolhida);
+        
+        gtag('event', 'change_team', { 'team': turmaEscolhida });
+        gerar(); // Redesenha o calendário com a nova turma
     }
 
     function gerar() {
         const box = document.getElementById('calendario-box');
-        const turma = document.getElementById('turmaSelect').value;
+        const selectEl = document.getElementById('turmaSelect');
+        
+        // BUSCA A TURMA SALVA OU DEFINE 'A' SE FOR A PRIMEIRA VEZ
+        const turmaSalva = localStorage.getItem(TURMA_KEY) || 'A';
+        selectEl.value = turmaSalva; // Sincroniza o visual do menu select
+        const turma = turmaSalva;
+
         const notas = JSON.parse(localStorage.getItem(DB_KEY) || '{}');
         const hoje = new Date(); hoje.setHours(0,0,0,0);
         box.innerHTML = "";
@@ -343,9 +311,7 @@
          const txt = document.getElementById('noteInput').value.trim(); 
          txt ? notas[dataAtiva] = txt : delete notas[dataAtiva]; 
          localStorage.setItem(DB_KEY, JSON.stringify(notas)); 
-         
          gtag('event', 'save_note', { 'date': dataAtiva });
-
          fecharTodosModais(); 
          gerar(); 
      }
@@ -368,19 +334,23 @@
     function abrirModoUso() { mostrarModal('modalUso'); }
     function abrirTelefones() { mostrarModal('modalTelefones'); }
 
+    // Relógio em tempo real
     setInterval(() => { 
          const clockEl = document.getElementById('big-clock');
          if(clockEl) clockEl.innerText = new Date().toLocaleTimeString('pt-BR'); 
-     }, 1000);
+    }, 1000);
 
+    // Inicialização ao carregar a página
     window.onload = () => { 
-         gerar(); 
+         gerar(); // Isso já vai carregar a turma salva
+         
+         // Scroll automático para o mês atual
          const m = new Date().getMonth(); 
          setTimeout(() => { 
              const el = document.getElementsByClassName('mes-container')[m]; 
              if(el) window.scrollTo({ top: el.offsetTop - 120, behavior: 'smooth' }); 
          }, 300); 
-     };
+    };
 </script>
 </body>
 </html>
