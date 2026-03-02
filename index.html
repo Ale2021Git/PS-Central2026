@@ -120,7 +120,7 @@
     </div>
 
     <div class="selector-container">
-        <select id="turmaSelect" onchange="gerarComAnalytics()">
+        <select id="turmaSelect" onchange="salvarESair()">
             <option value="A">EQUIPE A</option>
             <option value="B">EQUIPE B</option>
         </select>
@@ -181,18 +181,15 @@
 </div>
 
 <script>
-    // Configurações do SW para PWA
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/PS-Central2026/sw.js')
-                .then(reg => console.log('SW ativo'))
-                .catch(err => console.log('Erro SW', err));
+            navigator.serviceWorker.register('/PS-Central2026/sw.js').catch(err => console.log(err));
         });
     }
 
     const feriados = { "2026-01-01": "Ano Novo", "2026-01-20": "Padroeiro", "2026-02-17": "Carnaval", "2026-04-03": "Paixão", "2026-04-21": "Tiradentes", "2026-04-23": "São Jorge", "2026-05-01": "Trabalho", "2026-06-04": "Corpus Christi", "2026-09-07": "Independência", "2026-10-12": "Aparecida", "2026-11-02": "Finados", "2026-11-15": "República", "2026-11-20": "Zumbi", "2026-12-25": "Natal" };
     const DB_KEY = "PS_CENTRAL_2026_V12";
-    const TURMA_KEY = "PS_TURMA_PREFERIDA_2026"; // Chave única para a equipe
+    const TURMA_KEY = "ESCALA_TURMA_ATIVA"; 
     let dataAtiva = "";
 
     function checkTrabalho(dt, t) {
@@ -201,26 +198,21 @@
         return t === 'A' ? (diffDays % 2 === 0) : (diffDays % 2 !== 0);
     }
 
-    // Chamada quando o usuário muda o seletor manualmente
-    function gerarComAnalytics() {
-        const selectEl = document.getElementById('turmaSelect');
-        const turmaEscolhida = selectEl.value;
-        
-        // GRAVA A ESCOLHA NA MEMÓRIA
-        localStorage.setItem(TURMA_KEY, turmaEscolhida);
-        
-        gtag('event', 'change_team', { 'team': turmaEscolhida });
-        gerar(); // Redesenha o calendário com a nova turma
+    // Função central de salvamento
+    function salvarESair() {
+        const turma = document.getElementById('turmaSelect').value;
+        localStorage.setItem(TURMA_KEY, turma);
+        gtag('event', 'change_team', { 'team': turma });
+        gerar();
     }
 
     function gerar() {
         const box = document.getElementById('calendario-box');
         const selectEl = document.getElementById('turmaSelect');
         
-        // BUSCA A TURMA SALVA OU DEFINE 'A' SE FOR A PRIMEIRA VEZ
-        const turmaSalva = localStorage.getItem(TURMA_KEY) || 'A';
-        selectEl.value = turmaSalva; // Sincroniza o visual do menu select
-        const turma = turmaSalva;
+        // RECUPERAÇÃO ROBUSTA
+        const turma = localStorage.getItem(TURMA_KEY) || 'A';
+        selectEl.value = turma; 
 
         const notas = JSON.parse(localStorage.getItem(DB_KEY) || '{}');
         const hoje = new Date(); hoje.setHours(0,0,0,0);
@@ -334,23 +326,20 @@
     function abrirModoUso() { mostrarModal('modalUso'); }
     function abrirTelefones() { mostrarModal('modalTelefones'); }
 
-    // Relógio em tempo real
     setInterval(() => { 
          const clockEl = document.getElementById('big-clock');
          if(clockEl) clockEl.innerText = new Date().toLocaleTimeString('pt-BR'); 
     }, 1000);
 
-    // Inicialização ao carregar a página
-    window.onload = () => { 
-         gerar(); // Isso já vai carregar a turma salva
-         
-         // Scroll automático para o mês atual
-         const m = new Date().getMonth(); 
-         setTimeout(() => { 
-             const el = document.getElementsByClassName('mes-container')[m]; 
-             if(el) window.scrollTo({ top: el.offsetTop - 120, behavior: 'smooth' }); 
-         }, 300); 
-    };
+    // INICIALIZAÇÃO CORRIGIDA
+    document.addEventListener('DOMContentLoaded', () => {
+        gerar(); 
+        const m = new Date().getMonth(); 
+        setTimeout(() => { 
+            const el = document.getElementsByClassName('mes-container')[m]; 
+            if(el) window.scrollTo({ top: el.offsetTop - 120, behavior: 'smooth' }); 
+        }, 500); 
+    });
 </script>
 </body>
 </html>
