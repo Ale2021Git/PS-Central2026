@@ -1,13 +1,10 @@
 {
-  "name": "Escala PS Central 2026",
-  "short_name": "PSC 2026",
-  "description": "Escala de Plantões 2026 - Pronto Socorro Central",
-  "start_url": "/PS-Central2026/index.html",
-  "scope": "/PS-Central2026/",
+  "name": "Escala PS Central - Dr. Armando",
+  "short_name": "PS Central",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#002094",
   "theme_color": "#002094",
-  "orientation": "portrait",
   "icons": [
     {
       "src": "maskable_icon_x192.png",
@@ -20,22 +17,6 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "maskable_icon_x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Tela Inicial"
-    },
-    {
-      "src": "maskable_icon_x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Versão Desktop"
     }
   ]
 }

@@ -14,10 +14,10 @@
     <meta name="theme-color" content="#002094">
     <title>Escala PS Central - Dr. Armando</title>
 
-    <link rel="manifest" href="/PS-Central2026/manifest.json">
+    <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="/PS-Central2026/maskable_icon_x192.png">
+    <link rel="apple-touch-icon" href="maskable_icon_x192.png">
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     
@@ -139,9 +139,8 @@
 <div id="overlay" onclick="fecharTodosModais()"></div>
 
 <div id="modalUso" class="bottom-modal">
-    <h3 style="margin-bottom:15px">Instruções de Uso - <span id="legenda-equipe">Equipe A</span></h3>
-    <div id="legenda-corpo" style="text-align: left; line-height: 1.6;">
-        </div>
+    <h3 style="margin-bottom:15px">Legenda - <span id="legenda-equipe">Equipe A</span></h3>
+    <div id="legenda-corpo" style="text-align: left; line-height: 1.6;"></div>
     <button class="btn-close-modal" onclick="fecharTodosModais()">ENTENDI</button>
 </div>
 
@@ -182,9 +181,10 @@
 </div>
 
 <script>
+    // Registro do Service Worker corrigido para Vercel
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/PS-Central2026/sw.js').catch(err => console.log(err));
+            navigator.serviceWorker.register('sw.js').catch(err => console.log("Erro SW:", err));
         });
     }
 
@@ -259,7 +259,6 @@
                 }
                 if(notas[iso]) notasLista += `<div style="background:rgba(255,255,255,0.1); padding:8px; border-radius:8px; margin-bottom:5px; font-size:0.8em;"><b>Dia ${d}:</b> ${notas[iso]}</div>`;
 
-                // Aplicação da regra de cores por equipe
                 let corClasse = (turma === 'A') ? (trab ? 'BG-ESCURO' : 'BG-CLARO') : (trab ? 'BG-CLARO' : 'BG-ESCURO');
                 let cls = `dia ${corClasse}`;
                 
@@ -313,28 +312,18 @@
         const turma = localStorage.getItem(TURMA_KEY) || 'A';
         const titulo = document.getElementById('legenda-equipe');
         const corpo = document.getElementById('legenda-corpo');
-
         titulo.innerText = "Equipe " + turma;
-
         if (turma === 'A') {
-            corpo.innerHTML = `
-                <p>• <b>Plantão:</b> Cor Azul Escura</p>
-                <p>• <b>Folga:</b> Cor Azul Clara</p>
-            `;
+            corpo.innerHTML = `<p>• <b>Plantão:</b> Cor Azul Escura</p><p>• <b>Folga:</b> Cor Azul Clara</p>`;
         } else {
-            corpo.innerHTML = `
-                <p>• <b>Plantão:</b> Cor Azul Clara</p>
-                <p>• <b>Folga:</b> Cor Azul Escura</p>
-            `;
+            corpo.innerHTML = `<p>• <b>Plantão:</b> Cor Azul Clara</p><p>• <b>Folga:</b> Cor Azul Escura</p>`;
         }
-
         corpo.innerHTML += `
             <p>• <b style="color:var(--success)">Verde ($$):</b> 5º Dia Útil (Pagamento)</p>
-            <p>• <b style="color:var(--gold)">Borda Dourada:</b> Feriado / Data Especial</p>
+            <p>• <b style="color:var(--gold)">Borda Dourada:</b> Feriado</p>
             <hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;">
-            <p style="font-size: 0.8em; opacity: 0.7;"><i>As cores do calendário se adaptam à equipe selecionada para facilitar seu controle.</i></p>
+            <p style="font-size: 0.85em; opacity: 0.8;">O calendário inverte as cores conforme a equipe para facilitar a visualização do seu ciclo.</p>
         `;
-
         mostrarModal('modalUso');
     }
 
