@@ -4,50 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Escala PS Central 2026</title>
-    
     <link rel="manifest" href="./manifest.json">
-    
     <meta name="theme-color" content="#0051a2">
-    
     <link rel="stylesheet" href="./style.css">
-
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="PS Central">
+    <link rel="apple-touch-icon" href="./icon-192.png">
 </head>
 <body>
-
     <header>
         <h1>Escala 2026</h1>
         <p>Pronto Socorro Central</p>
+        <select id="teamSelect">
+            <option value="">Selecione sua Equipe</option>
+            <option value="A">Equipe A</option>
+            <option value="B">Equipe B</option>
+            <option value="C">Equipe C</option>
+        </select>
     </header>
 
     <main id="app">
-        <div id="calendar">
-            <p>Carregando escala...</p>
+        <div id="calendar" aria-live="polite">
+            <p id="status-msg">Selecione uma equipe para visualizar a escala.</p>
         </div>
     </main>
 
     <script src="./script.js"></script>
-
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                // O { scope: './' } é o que impede de um app atropelar o outro
                 navigator.serviceWorker.register('./sw.js', { scope: './' })
-                    .then(reg => {
-                        console.log('Service Worker registrado com sucesso no escopo:', reg.scope);
-                    })
-                    .catch(err => {
-                        console.log('Falha ao registrar o Service Worker:', err);
-                    });
+                    .then(reg => console.log('SW ativo:', reg.scope))
+                    .catch(err => console.log('Erro SW:', err));
             });
         }
-
-        // Detecta quando o app é instalado
-        window.addEventListener('beforeinstallprompt', (e) => {
-            console.log('O app pode ser instalado agora!');
-        });
     </script>
 </body>
 </html>
