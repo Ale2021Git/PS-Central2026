@@ -8,7 +8,7 @@
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/192/medical-heart.png">
+    <link rel="apple-touch-icon" href="maskable_icon_x192.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@700&display=swap');
@@ -88,7 +88,6 @@
         .HOJE { border: 3px solid var(--neon) !important; z-index: 10; font-weight: 900; }
         .HAS_NOTE::after { content: ''; position: absolute; top: 4px; right: 4px; width: 6px; height: 6px; background: var(--danger); border-radius: 50%; border: 1px solid white; }
         
-        /* Estilo Pagamento */
         .PAGAMENTO { background: var(--pay-day) !important; color: white !important; }
         .PAGAMENTO::before { content: 'attach_money'; font-family: 'Material Symbols Outlined'; position: absolute; top: -6px; font-size: 14px; color: #FFD700; font-weight: 900; }
 
@@ -135,13 +134,13 @@
 <div id="overlay" onclick="fecharTodosModais()"></div>
 
 <div id="modalTelefones" class="bottom-modal">
-    <h3>Contatos</h3>
+    <h3>Contatos Úteis</h3>
     <a href="tel:192" style="display:block; padding:15px; background:#fee2e2; border-radius:10px; color:#b91c1c; text-decoration:none; margin-bottom:10px; font-weight:700">SAMU 192</a>
     <button class="btn-close-modal" onclick="fecharTodosModais()">VOLTAR</button>
 </div>
 
 <div id="modalStats" class="bottom-modal">
-    <h3>Estatísticas 2026</h3>
+    <h3>Resumo Anual 2026</h3>
     <div id="stats-content"></div>
     <button class="btn-close-modal" onclick="fecharTodosModais()">FECHAR</button>
 </div>
@@ -157,7 +156,7 @@
     <h3>Legenda</h3>
     <p>• 🟢 <b>Verde:</b> 5º Dia Útil (Pagamento)</p>
     <p>• <b>Equipe A:</b> Plantão (Azul Escuro)</p>
-    <p>• <b>Equipe B:</b> Plantão (Azul Claro/Branco)</p>
+    <p>• <b>Equipe B:</b> Plantão (Azul Claro)</p>
     <button class="btn-close-modal" onclick="fecharTodosModais()">ENTENDI</button>
 </div>
 
@@ -167,11 +166,19 @@
 </footer>
 
 <script>
+    // Registro do Service Worker para Instalação PWA
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('SW ativo:', reg.scope))
+                .catch(err => console.log('Erro SW:', err));
+        });
+    }
+
     const feriados = { "2026-01-01": "Ano Novo", "2026-01-20": "Padroeiro", "2026-02-17": "Carnaval", "2026-04-03": "Paixão", "2026-04-21": "Tiradentes", "2026-04-23": "São Jorge", "2026-05-01": "Trabalho", "2026-06-04": "Corpus Christi", "2026-09-07": "Independência", "2026-10-12": "Aparecida", "2026-11-02": "Finados", "2026-11-15": "República", "2026-11-20": "Zumbi", "2026-12-25": "Natal" };
     const DB_KEY = "PS_CENTRAL_2026_V12";
     let dataAtiva = "";
 
-    // Funções de Negócio
     function checkTrabalho(dt, t) {
         const dataBase = new Date(2026, 0, 1);
         const diffDays = Math.floor((dt - dataBase) / (1000 * 60 * 60 * 24));
@@ -179,9 +186,9 @@
     }
 
     function isDiaUtil(dt) {
-        const diaSemana = dt.getDay(); // 0 = Domingo
+        const diaSemana = dt.getDay();
         const iso = dt.toISOString().split('T')[0];
-        return diaSemana !== 0 && !feriados[iso]; // Domingo e Feriado não são dias úteis
+        return diaSemana !== 0 && !feriados[iso]; 
     }
 
     function getQuintoDiaUtil(mes, ano) {
@@ -199,7 +206,7 @@
         const box = document.getElementById('calendario-box');
         const turma = document.getElementById('turmaSelect').value;
         
-        // PERSISTÊNCIA: Salva a equipe escolhida
+        // Salva a escolha da equipe no navegador
         localStorage.setItem('equipe_preferida', turma);
 
         const notas = JSON.parse(localStorage.getItem(DB_KEY) || '{}');
@@ -245,7 +252,7 @@
                     </div>
                     <div class="mes-face mes-back" onclick="toggleFlip(${m})">
                         <div style="font-size:0.8em; color:var(--neon)">ANOTAÇÕES DE ${mNome.toUpperCase()}</div>
-                        <div style="font-size:0.7em; margin-top:10px">Toque em um dia para adicionar lembretes.</div>
+                        <div style="font-size:0.75em; margin-top:10px">Toque em qualquer dia do mês para adicionar uma nota personalizada à sua escala.</div>
                     </div>
                 </div>`;
             box.appendChild(container);
@@ -260,7 +267,7 @@
         const t = document.getElementById('turmaSelect').value;
         const trab = checkTrabalho(hoje, t);
         const el = document.getElementById('status-badge');
-        el.innerHTML = trab ? '<span class="material-symbols-outlined">medical_services</span> PLANTÃO' : '<span class="material-symbols-outlined">home</span> FOLGA';
+        el.innerHTML = trab ? '<span class="material-symbols-outlined">medical_services</span> HOJE: PLANTÃO' : '<span class="material-symbols-outlined">home</span> HOJE: FOLGA';
         el.style.background = trab ? 'var(--ps-pantone287)' : 'var(--ps-light)';
         el.style.color = trab ? 'white' : 'var(--ps-pantone287)';
     }
@@ -288,7 +295,6 @@
     setInterval(() => { document.getElementById('big-clock').innerText = new Date().toLocaleTimeString('pt-BR'); }, 1000);
 
     window.onload = () => {
-        // CARREGAR EQUIPE SALVA
         const salva = localStorage.getItem('equipe_preferida');
         if(salva) document.getElementById('turmaSelect').value = salva;
         
