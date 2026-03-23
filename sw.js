@@ -1,4 +1,4 @@
-const CACHE_NAME = 'escala-dr-armando-v2.1';
+const CACHE_NAME = 'escala-dr-armando-v2.2';
 
 const ASSETS = [
   './',
