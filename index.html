@@ -99,6 +99,11 @@
         .btn-close-modal { background: #F1F5F9; color: var(--text); border: none; padding: 12px; border-radius: 12px; width: 100%; margin-top: 8px; font-weight: 700; }
         
         footer { background: var(--ps-pantone287); color: white; text-align: center; padding: 30px 20px; font-size: 0.75em; line-height: 1.6; }
+
+        /* Estilo para lista de telefones e feriados no card */
+        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 8px; margin-bottom: 5px; text-decoration: none; color: white; }
+        .list-item b { color: var(--neon); }
+        .feriado-card-item { font-size: 0.75em; border-bottom: 1px solid rgba(255,255,255,0.2); padding: 4px 0; }
     </style>
 </head>
 <body>
@@ -135,7 +140,10 @@
 
 <div id="modalTelefones" class="bottom-modal">
     <h3>Contatos Úteis</h3>
-    <a href="tel:192" style="display:block; padding:15px; background:#fee2e2; border-radius:10px; color:#b91c1c; text-decoration:none; margin-bottom:10px; font-weight:700">SAMU 192</a>
+    <a href="tel:192" class="list-item" style="background:#fee2e2; color:#b91c1c;"><span>SAMU</span><b>192</b></a>
+    <a href="tel:193" class="list-item"><span>Bombeiros</span><b>193</b></a>
+    <a href="tel:190" class="list-item"><span>Polícia Militar</span><b>190</b></a>
+    <a href="tel:08007226001" class="list-item"><span>Intoxicações (CEATOX)</span><b>0800 722 6001</b></a>
     <button class="btn-close-modal" onclick="fecharTodosModais()">VOLTAR</button>
 </div>
 
@@ -170,8 +178,8 @@
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log('SW ativo:', reg.scope))
-                .catch(err => console.log('Erro SW:', err));
+                .then(reg => console.log('SW registrado com sucesso!', reg.scope))
+                .catch(err => console.log('Falha ao registrar SW:', err));
         });
     }
 
@@ -220,6 +228,17 @@
             const espacos = primDia === 0 ? 6 : primDia - 1;
             const quintoDiaUtil = getQuintoDiaUtil(m, 2026);
             
+            // Buscar feriados do mês para o verso do card
+            let feriadosDoMesHTML = "";
+            for(let key in feriados) {
+                let fDate = new Date(key + "T00:00:00");
+                if(fDate.getMonth() === m) {
+                    let diaF = fDate.getDate();
+                    feriadosDoMesHTML += `<div class="feriado-card-item"><b>${diaF}</b>: ${feriados[key]}</div>`;
+                }
+            }
+            if(!feriadosDoMesHTML) feriadosDoMesHTML = "<div>Sem feriados oficiais.</div>";
+
             let diasHTML = `<div class="dia-sem">Seg</div><div class="dia-sem">Ter</div><div class="dia-sem">Qua</div><div class="dia-sem">Qui</div><div class="dia-sem">Sex</div><div class="dia-sem">Sáb</div><div class="dia-sem">Dom</div>`;
             for(let e=0; e<espacos; e++) diasHTML += `<div></div>`;
 
@@ -251,8 +270,11 @@
                         <div class="grid">${diasHTML}</div>
                     </div>
                     <div class="mes-face mes-back" onclick="toggleFlip(${m})">
-                        <div style="font-size:0.8em; color:var(--neon)">ANOTAÇÕES DE ${mNome.toUpperCase()}</div>
-                        <div style="font-size:0.75em; margin-top:10px">Toque em qualquer dia do mês para adicionar uma nota personalizada à sua escala.</div>
+                        <div style="font-size:0.8em; color:var(--neon); font-weight:800; border-bottom: 1px solid var(--neon);">FERIADOS E NOTAS</div>
+                        <div style="margin: 5px 0; font-size:0.75em; flex-grow:1;">
+                            ${feriadosDoMesHTML}
+                        </div>
+                        <div style="font-size:0.65em; opacity:0.7; border-top:1px solid rgba(255,255,255,0.2); padding-top:5px;">Toque no calendário para gerenciar notas.</div>
                     </div>
                 </div>`;
             box.appendChild(container);
@@ -287,6 +309,24 @@
         localStorage.setItem(DB_KEY, JSON.stringify(notas));
         fecharTodosModais();
         gerar();
+    }
+
+    function abrirStats() {
+        const turma = document.getElementById('turmaSelect').value;
+        let p = 0, f = 0;
+        for(let m=0; m<12; m++) {
+            let total = new Date(2026, m+1, 0).getDate();
+            for(let d=1; d<=total; d++) {
+                checkTrabalho(new Date(2026,m,d), turma) ? p++ : f++;
+            }
+        }
+        document.getElementById('stats-content').innerHTML = `
+            <div style="display:flex; justify-content:space-around; text-align:center;">
+                <div><h2 style="margin:0; color:var(--ps-pantone287)">${p}</h2><small>Plantões</small></div>
+                <div><h2 style="margin:0; color:var(--ps-med)">${f}</h2><small>Folgas</small></div>
+            </div>
+        `;
+        mostrarModal('modalStats');
     }
 
     function mostrarModal(id) { document.getElementById('overlay').style.display = 'block'; document.getElementById(id).classList.add('show'); }
